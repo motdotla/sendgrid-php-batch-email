@@ -5,15 +5,19 @@
 
   define("SENDGRID_USERNAME", $_ENV['SENDGRID_USERNAME']);
   define("SENDGRID_PASSWORD", $_ENV['SENDGRID_PASSWORD']); 
-  define("TO", $_ENV['TO']);
 
   $sendgrid   = new SendGrid(SENDGRID_USERNAME, SENDGRID_PASSWORD);
   $mail       = new SendGrid\Mail();
 
-  $mail-> addTo(TO)->
-          setFrom(TO)->
-          setSubject('[send-film] delivery')->
-          setText('Email has been delivered');
+  $recipients = array("alpha@mailinator.com", "beta@mailinator.com", "zeta@mailinator.com");
+  $names      = array("Alpha", "Beta", "Zeta");
+
+  $mail-> setFrom("scott.motte@sendgrid.com")->
+          setSubject('[sendgrid-php-batch-email]')->
+          setTos($recipients)->
+          addSubstitution("%name%", $names)->
+          setText("Hey %name, we have an email for you")->
+          setHtml("<h1>Hey %name%, we have an email for you</h1>");
 
   $result = $sendgrid->smtp->send($mail);
 
